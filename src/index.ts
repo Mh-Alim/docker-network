@@ -1,31 +1,38 @@
-import express, { Express, Request, Response } from 'express';
-import { User } from './db';
+import express, { Express, Request, Response } from "express";
+import { User } from "./db";
+
+// Load environment variables from .env file
 
 const app: Express = express();
 const port: number = 3000;
 
 app.use(express.json());
 
+app.get("/", (req: any, res: any) => {
+  return res.json({
+    message: "server is running",
+  });
+});
 // Endpoint to create a user
-app.post('/user', async (req: Request, res: Response) => {
+app.post("/user", async (req: Request, res: Response) => {
   const { name, age, email } = req.body;
   const newUser = new User({ name, age, email });
 
   try {
     const savedUser = await newUser.save();
-    res.status(201).send({ message: 'User created', user: savedUser });
+    res.status(201).send({ message: "User created", user: savedUser });
   } catch (err) {
-    res.status(500).send({ message: 'Error creating user', error: err });
+    res.status(500).send({ message: "Error creating user", error: err });
   }
 });
 
 // Endpoint to fetch all users
-app.get('/users', async (req: Request, res: Response) => {
+app.get("/users", async (req: Request, res: Response) => {
   try {
     const users = await User.find();
     res.status(200).send(users);
   } catch (err) {
-    res.status(500).send({ message: 'Error fetching users', error: err });
+    res.status(500).send({ message: "Error fetching users", error: err });
   }
 });
 
